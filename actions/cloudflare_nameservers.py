@@ -4,6 +4,9 @@ from services.porkbun_functions import get_all_domains_with_nameservers, update_
 from services.cloudflare_functions import add_domains_to_cloudflare
 
 def update_cloudflare_nameservers():
+    """
+    This is the workflow for updating the nameservers for a domain in Cloudflare and adding them to Porkbun.
+    """
     if CLOUDFLARE['CHANGE_NAMESERVERS'] == True:
         print("📋 Getting Porkbun domains and nameservers...")
         porkbun_data = get_all_domains_with_nameservers()

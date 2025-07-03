@@ -6,6 +6,9 @@ from utils.config import EMAILBISON, PORKBUN, CLOUDFLARE
 import pandas as pd
 
 def grab_all_domains(api_key):
+    """
+    This is the workflow for grabbing all domains from a Bison workspace.
+    """
     all_data = []
     
     data, next_page = get_bison_accounts(api_key)
@@ -24,6 +27,9 @@ def grab_all_domains(api_key):
     return df_accounts, df_domains
 
 def calculate_bison_domain_stats(df_accounts, df_domains, api_key):
+    """ 
+    This is the workflow for calculating some stats for domains in a Bison workspace.
+    """
     df_domains = get_domain_tags(df_accounts, df_domains)
     df_domains = add_account_count(df_accounts, df_domains)
     workspace_info = workspace_details(api_key)
@@ -42,9 +48,12 @@ def calculate_bison_domain_stats(df_accounts, df_domains, api_key):
     df_domains = calculating_reply_rate(df_accounts, df_domains)
     return df_domains
 
-def calculate_porkbun_domain_stats(df_domains):
+def calculate_porkbun_domain_stats(df_domains, PORKBUN_KEY, PORKBUN_SECRET, CF_API_TOKEN):
+    """
+    This is a test workflow for calculating porkbun domain stats. (May not use this)
+    """
     results = []
-    domains = get_domains(PORKBUN['PORKBUN_KEY'], PORKBUN['PORKBUN_SECRET'])
+    domains = get_domains(PORKBUN_KEY, PORKBUN_SECRET)
     df_domains['in_porkbun'] = False
 
     for domain in domains:
@@ -58,26 +67,26 @@ def calculate_porkbun_domain_stats(df_domains):
             tag_names = []
 
         # Get nameservers
-        nameservers = get_nameservers(domain_name, PORKBUN['PORKBUN_KEY'], PORKBUN['PORKBUN_SECRET'])
+        nameservers = get_nameservers(domain_name, PORKBUN_KEY, PORKBUN_SECRET)
 
         # Get forwarding
-        forwarding = get_forwarding(domain_name, PORKBUN['PORKBUN_KEY'], PORKBUN['PORKBUN_SECRET'])
+        forwarding = get_forwarding(domain_name, PORKBUN_KEY, PORKBUN_SECRET)
         if isinstance(forwarding, list) and forwarding:
             forwarding = forwarding[0].get('location')
         else:
             forwarding = None
 
         # Get A record from Porkbun
-        dns_records = get_dns_records(domain_name, PORKBUN['PORKBUN_KEY'], PORKBUN['PORKBUN_SECRET'])
+        dns_records = get_dns_records(domain_name, PORKBUN_KEY, PORKBUN_SECRET)
         a_record = None
         if isinstance(dns_records, list):
             a_record = next((record.get('content') for record in dns_records if record.get('type') == 'A'), None)
 
         # If not found, try Cloudflare
-        if not a_record and CLOUDFLARE.get("CF_API_TOKEN"):
+        if not a_record and CF_API_TOKEN:
             try:
-                zone_id = get_zone_id(domain_name, CLOUDFLARE["CF_API_TOKEN"])
-                a_records = get_a_records(zone_id, domain_name, CLOUDFLARE["CF_API_TOKEN"])
+                zone_id = get_zone_id(domain_name, CF_API_TOKEN)
+                a_records = get_a_records(zone_id, domain_name, CF_API_TOKEN)
                 if isinstance(a_records, list) and a_records:
                     a_record = a_records[0].get('content')
             except Exception as e:
@@ -108,6 +117,9 @@ def calculate_porkbun_domain_stats(df_domains):
     return stats_df, df_domains
 
 def find_registrar(df_domains):
+    """
+    Function will be used to find registrar of domains in the future.
+    """
     df_domains['registrar'] = None
     for domain in df_domains['domain']:
         if domain in PORKBUN['PORKBUN_DOMAINS']:
@@ -116,6 +128,9 @@ def find_registrar(df_domains):
             df_domains.loc[df_domains['domain'] == domain, 'registrar'] = 'EmailBison'
 
 def main():
+    """
+    Main function to run the script.
+    """
     df_accounts, df_domains = grab_all_domains(EMAILBISON["BISON_API_KEY"])
     print("Domains grabbed")
     df_domains = calculate_bison_domain_stats(df_accounts, df_domains, EMAILBISON["BISON_API_KEY"])

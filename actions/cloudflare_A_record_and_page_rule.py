@@ -4,6 +4,9 @@ from services.cloudflare_functions import create_page_rule, delete_page_rule, up
 import requests
 
 def add_cloudflare_A_record_and_page_rule(domains):
+    """
+    This is the workflow for adding an A record and page rule to a domain in Cloudflare.
+    """
     if CLOUDFLARE['ADD_A_RECORD'] == True and CLOUDFLARE['ADD_PAGERULE'] == True:
         for domain in domains:
             exists, zone_data = check_zone_exists(domain, CLOUDFLARE['CF_API_TOKEN'])
@@ -28,6 +31,9 @@ def add_cloudflare_A_record_and_page_rule(domains):
                 raise
 
 def delete_cloudflare_A_record_and_page_rule(domains):
+    """
+    This is the workflow for deleting an A record and page rule from a domain in Cloudflare.
+    """
     if CLOUDFLARE['DELETE_A_RECORD'] == True and CLOUDFLARE['DELETE_PAGERULE'] == True:
         for domain in domains:
             zone_id = get_zone_id(domain)
@@ -45,6 +51,9 @@ def delete_cloudflare_A_record_and_page_rule(domains):
                 raise
 
 def update_cloudflare_A_record_and_page_rule(domains):
+    """
+    This is the workflow for updating an A record and page rule for a domain in Cloudflare.
+    """
     if CLOUDFLARE['CHANGE_A_RECORD'] == True and CLOUDFLARE['CHANGE_PAGERULE'] == True:
         for domain in domains:
             zone_id = get_zone_id(domain)

@@ -3,6 +3,9 @@ from services.cloudflare_functions import create_a_record, delete_a_record, upda
 import requests
 
 def add_cloudflare_A_records(domains):
+    """
+    This is the workflow for adding an A record to a domain in Cloudflare.
+    """
     if CLOUDFLARE['ADD_A_RECORD'] == True and CLOUDFLARE['ADD_PAGERULE'] == False:
         for domain in domains:
             exists, zone_data = check_zone_exists(domain, CLOUDFLARE['CF_API_TOKEN'])
@@ -20,6 +23,9 @@ def add_cloudflare_A_records(domains):
                 raise
 
 def delete_cloudflare_A_records(domains):
+    """
+    This is the workflow for deleting an A record from a domain in Cloudflare.
+    """
     if CLOUDFLARE['DELETE_A_RECORD'] == True and CLOUDFLARE['DELETE_PAGERULE'] == False:
         for domain in domains:
             zone_id = get_zone_id(domain)
@@ -31,6 +37,9 @@ def delete_cloudflare_A_records(domains):
                 print(f"A record for {domain} does not exist")
 
 def update_cloudflare_A_records(domains):
+    """
+    This is the workflow for updating an A record for a domain in Cloudflare.
+    """
     if CLOUDFLARE['CHANGE_A_RECORD'] == True and CLOUDFLARE['CHANGE_PAGERULE'] == False:
         for domain in domains:
             zone_id = get_zone_id(domain)

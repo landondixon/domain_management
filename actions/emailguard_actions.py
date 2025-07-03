@@ -4,6 +4,9 @@ from utils.config import DOMAINS, PRIMARY_DOMAIN, EMAILGUARD
 import time
 
 def adding_eg_a_record():
+    """
+    This is the workflow for using an A record from EmailGuard.
+    """
     if EMAILGUARD['ADD_MASKING_PROXY'] == True:
         ip = get_proxy_ip()
         zone_ids = {}
