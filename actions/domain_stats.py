@@ -131,12 +131,13 @@ def main():
     """
     Main function to run the script.
     """
-    df_accounts, df_domains = grab_all_domains(EMAILBISON["BISON_API_KEY"])
-    print("Domains grabbed")
-    df_domains = calculate_bison_domain_stats(df_accounts, df_domains, EMAILBISON["BISON_API_KEY"])
-    print("Bison domains calculated")
-    df_domains.to_csv('bison_domains.csv', index=False)
-    print("Domains saved")
+    if EMAILBISON["GRAB_DOMAINS"] == True:
+        df_accounts, df_domains = grab_all_domains(EMAILBISON["BISON_API_KEY"])
+        print("Domains grabbed")
+        df_domains = calculate_bison_domain_stats(df_accounts, df_domains, EMAILBISON["BISON_API_KEY"])
+        print("Bison domains calculated")
+        df_domains.to_csv('bison_domains.csv', index=False)
+        print("Domains saved")
 
 if __name__ == "__main__":
     main()

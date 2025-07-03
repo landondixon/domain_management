@@ -37,7 +37,8 @@ EMAILGUARD = {
 }
 
 EMAILBISON = {
-    "BISON_API_KEY": os.getenv("BISON_KEY") # The API key for a workspace in EmailBison
+    "BISON_API_KEY": os.getenv("BISON_KEY"), # The API key for a workspace in EmailBison
+    "GRAB_DOMAINS": False # For grabbing domains from a workspace in EmailBison
 }
 
 DOMAINS = ["sylnow.com"] # The domains to be used in the script (representation of the domains they choose to use)
