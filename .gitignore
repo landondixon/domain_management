@@ -1,4 +1,4 @@
 Z- reference_files/
 .env
 __pycache__/
-.csv
+*.csv
